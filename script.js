@@ -5,17 +5,17 @@
   function initCSV() {
     if (!localStorage.getItem(KEY)) {
       // change the header columns to whatever you actually need
-      localStorage.setItem(KEY, 'ts,first,second,response\n');
+      localStorage.setItem(KEY, 'ts,first,second,result,resultEmoji,resultIsNew\n');
     }
   }
 
   // ─── Append one line to the CSV ───────────────────────────────────────────
   function appendCSV({ ts, request, response }) {
     // pick a small “responseCode” field, or whatever tiny summary you like:
-    let code = (response && response.code) || response || '';
+    let item = response.result;
     // escape any commas/linebreaks in code
-    code = String(code).replace(/"/g, '""');
-    const line = `${ts},${request.first},${request.second},"${code}"\n`;
+    item = String(item).replace(/"/g, '""');
+    const line = `${ts},${request.first},${request.second},"${item}",${response.emoji},${response.isNew}\n`;
     localStorage.setItem(KEY,
       localStorage.getItem(KEY) + line
     );
@@ -37,7 +37,7 @@
   // ─── Build the little panel ───────────────────────────────────────────────
   const panel = document.createElement('div');
   Object.assign(panel.style, {
-    position: 'fixed', top: '10px', left: '10px',
+    position: 'fixed', bottom: '10px', left: '110px',
     background: '#fff', border: '1px solid #333',
     padding: '8px', font: '12px sans-serif',
     zIndex: 99999, boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
