@@ -15,6 +15,7 @@
     let item = response.result;
     // escape any commas/linebreaks in code
     item = String(item).replace(/"/g, '""');
+    console.log("!!!", response);
     const line = `${ts},${request.first},${request.second},"${item}",${response.emoji},${response.isNew}\n`;
     localStorage.setItem(KEY,
       localStorage.getItem(KEY) + line
@@ -98,7 +99,7 @@
 
       // only store a tiny “response code” or summary field here:
       appendCSV({ ts: Date.now(), request: req,
-                  response: (data && data.code) || '' });
+                  response: data });
       console.log(`🧩 ${req.first}+${req.second} →`, data);
 
       updateUI();
