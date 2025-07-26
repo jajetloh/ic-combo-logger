@@ -9,15 +9,34 @@
     }
   }
 
-  // ─── Append one line to the CSV ───────────────────────────────────────────
+  // ─── helper to escape one CSV field ───────────────────────────────────────
+  function escapeCsvField(val) {
+    const s = String(val === null || val === undefined ? '' : val);
+    // double any quotes
+    const escaped = s.replace(/"/g, '""');
+    // wrap in quotes if it has commas, quotes or newlines
+    if (/,|"|\r|\n/.test(s)) {
+      return `"${escaped}"`;
+    }
+    return escaped;
+  }
+
+  // ─── Append one line to the CSV (now fully robust) ─────────────────────────
   function appendCSV({ ts, request, response }) {
-    // pick a small “responseCode” field, or whatever tiny summary you like:
-    let item = response.result;
-    // escape any commas/linebreaks in code
-    item = String(item).replace(/"/g, '""');
-    console.log("!!!", response);
-    const line = `${ts},${request.first},${request.second},"${item}",${response.emoji},${response.isNew}\n`;
-    localStorage.setItem(KEY,
+    const cells = [
+      ts,
+      request.first,
+      request.second,
+      response.result,
+      response.emoji,
+      response.isNew
+    ].map(escapeCsvField);
+
+    // join and add newline
+    const line = cells.join(',') + '\n';
+
+    localStorage.setItem(
+      KEY,
       localStorage.getItem(KEY) + line
     );
   }
