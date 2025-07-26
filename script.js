@@ -114,8 +114,12 @@
       const resp = await _fetch.apply(this, arguments);
       const copy = resp.clone();
       let data;
-      try { data = await copy.json() }
-      catch { data = await copy.text() }
+      if (copy.status == 200) {
+        try { data = await copy.json() }
+        catch { data = await copy.text() }
+      } else {
+        data = { result: null, emoji: null, isNew: null };
+      }
 
       // only store a tiny “response code” or summary field here:
       appendCSV({ ts: Date.now(), request: req,
