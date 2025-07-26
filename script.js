@@ -84,7 +84,8 @@
   };
   clrBtn.onclick = clearCSV;
 
-  panel.append('Lines: ', cntSpan, dlBtn, clrBtn);
+  panel.append('Lines: ', cntSpan, dlBtn);
+  // panel.append('Lines: ', cntSpan, dlBtn, clrBtn);
   document.body.append(panel);
 
   function updateUI() {
